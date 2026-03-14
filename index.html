@@ -15,47 +15,6 @@
 
 <!-- css styles -->
 <style>
-
-body {
-  animation: rotate-bg-color 10s infinite;
-}
-
-@keyframes rotate-bg-color {
-  0% {
-    background-color: #007bff;
-  }
-  10% {
-    background-color: #ff2600;
-  }
-  20% {
-    background-color: #ffdf00;
-  }
-  30% {
-    background-color: #ff2600;
-  }
-  40% {
-    background-color: #007bff;
-  }
-  50% {
-    background-color: #2fdc51;
-  }
-  60% {
-    background-color: #007bff;
-  }
-  70% {
-    background-color: #ffdf00;
-  }
-  80% {
-    background-color: #ff2600;
-  }
-  90% {
-    background-color: #ffdf00;
-  }
-  100% {
-    background-color: #007bff;
-  }
-}
-
   
 @font-face {
     font-family: 'Cooper Black';
@@ -91,18 +50,14 @@ header{
 }
 
 /* main styles */
-html, body{
-  height: 100%;
-  margin: 0;
-  padding: 0;
 
-}
 
 body{
-  position: absolute;
-  display: inline-block;
+  position: static;
+  display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  background-color: rgb(232, 224, 204);
 }
 
 *{
@@ -115,7 +70,7 @@ body{
 
 
 main{
-  display: inline-block;
+  display: inline;
   justify-content: center;
   align-items: center;
 }
@@ -155,6 +110,7 @@ p{
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #453e2c;
 }
 
 </style>
