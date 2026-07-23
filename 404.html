@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 — Page Not Found</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --background: #ffebca;
+      --foreground: #f4f1ea;
+      --muted: #343434;
+      --accent: #1d1d1d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      align-items: center;
+      background: var(--background);
+      color: var(--foreground);
+      display: flex;
+      font-family: Arial, Helvetica, sans-serif;
+      justify-content: center;
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    main {
+      padding: 2rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .code {
+      color: var(--accent);
+      font-size: clamp(7rem, 25vw, 18rem);
+      font-weight: 900;
+      letter-spacing: -0.08em;
+      line-height: 0.8;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      margin: 2rem 0 0.75rem;
+    }
+
+    p {
+      color: var(--muted);
+      margin: 0 0 2.5rem;
+    }
+
+    .marquee {
+      border-bottom: 1px solid var(--accent);
+      border-top: 1px solid var(--accent);
+      color: var(--accent);
+      display: flex;
+      overflow: hidden;
+      padding: 0.8rem 0;
+      white-space: nowrap;
+    }
+
+    .marquee span {
+      animation: scroll 12s linear infinite;
+      display: inline-block;
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      font-weight: 700;
+      padding-right: 3rem;
+    }
+
+    @keyframes scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .marquee span { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="code">404</div>
+    <div class="marquee" aria-label="yeah lil bro this page doesn't exist...">
+      <span>yeah lil bro this page doesn't exist... &nbsp; • &nbsp; yeah lil bro this page doesn't exist... &nbsp; • &nbsp;</span>
+      <span aria-hidden="true">yeah lil bro this page doesn't exist... &nbsp; • &nbsp; yeah lil bro this page doesn't exist... &nbsp; • &nbsp;</span>
+    </div>
+	<p></p>
+	<p>(you should probably, like, go back.)</p>
+  </main>
+</body>
+</html>
