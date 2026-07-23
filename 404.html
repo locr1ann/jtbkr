@@ -3,92 +3,147 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>404 — Page Not Found</title>
+  <title>404</title>
   <style>
-    :root {
-      color-scheme: dark;
-      --background: #ffebca;
-      --foreground: #f4f1ea;
-      --muted: #343434;
-      --accent: #1d1d1d;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      align-items: center;
-      background: var(--background);
-      color: var(--foreground);
-      display: flex;
-      font-family: Arial, Helvetica, sans-serif;
-      justify-content: center;
-      margin: 0;
-      min-height: 100vh;
-      overflow: hidden;
-    }
-
-    main {
-      padding: 2rem;
-      text-align: center;
-      width: 100%;
-    }
-
-    .code {
-      color: var(--accent);
-      font-size: clamp(7rem, 25vw, 18rem);
-      font-weight: 900;
-      letter-spacing: -0.08em;
-      line-height: 0.8;
-      margin: 0;
-    }
-
-    h1 {
-      font-size: clamp(1.5rem, 4vw, 3rem);
-      margin: 2rem 0 0.75rem;
-    }
-
-    p {
-      color: var(--muted);
-      margin: 0 0 2.5rem;
-    }
-
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #fff; }
+    canvas { display: block; width: 100%; height: 100%; cursor: default; }
     .marquee {
-      border-bottom: 1px solid var(--accent);
-      border-top: 1px solid var(--accent);
-      color: var(--accent);
-      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
       overflow: hidden;
-      padding: 0.8rem 0;
+      background: #fff;
+      color: #404040;
+      font: 14px/2 monospace;
       white-space: nowrap;
+      z-index: 1;
     }
-
-    .marquee span {
-      animation: scroll 12s linear infinite;
+    .marquee a {
       display: inline-block;
-      font-size: clamp(1rem, 2vw, 1.4rem);
-      font-weight: 700;
-      padding-right: 3rem;
+      padding-left: 100%;
+      color: inherit;
+      text-decoration: none;
+      animation: marquee 14s linear infinite;
     }
-
-    @keyframes scroll {
+    .marquee a:hover { color: #FF7300; }
+    @keyframes marquee {
       from { transform: translateX(0); }
       to { transform: translateX(-100%); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .marquee span { animation: none; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <div class="code">404</div>
-    <div class="marquee" aria-label="yeah lil bro this page doesn't exist...">
-      <span>yeah lil bro this page doesn't exist... &nbsp; • &nbsp; yeah lil bro this page doesn't exist... &nbsp; • &nbsp;</span>
-      <span aria-hidden="true">yeah lil bro this page doesn't exist... &nbsp; • &nbsp; yeah lil bro this page doesn't exist... &nbsp; • &nbsp;</span>
-    </div>
-	<p></p>
-	<p>(you should probably, like, go back.)</p>
-  </main>
+  <canvas id="canvas" aria-hidden="true"></canvas>
+  <div class="marquee"><a href="https://jtbkr.cc">sorry,,, this page doesn't exist. go back?</a></div>
+  <script>
+    (() => {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const TAU = Math.PI * 2;
+      const dots = [];
+      const pointer = { x: -9999, y: -9999, active: false, lastMove: 0 };
+      let width, height, scale, dpr;
+
+      function resize() {
+        dpr = Math.min(devicePixelRatio || 1, 2);
+        width = canvas.clientWidth;
+        height = canvas.clientHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        scale = Math.min(width / 900, height / 360);
+        buildDots();
+      }
+
+      function buildDots() {
+        dots.length = 0;
+        const dotSize = Math.max(2, Math.min(5.1, Math.min(width, height) / 180));
+        const gap = dotSize * 1.4;
+        const cell = dotSize + gap;
+        const cols = Math.ceil(width / cell);
+        const rows = Math.ceil(height / cell);
+        // Thicker eleven-row block glyphs: 4, 0, 4.
+        const glyphs = [
+          ['0011110', '0111110', '1110010', '1100010', '1100010', '1111111', '0111111', '0000010', '0000010', '0000010', '0000010'],
+          ['0011110', '0111111', '1100011', '1100011', '1100011', '1100011', '1100011', '1100011', '1100011', '0111111', '0011110'],
+          ['0011110', '0111110', '1110010', '1100010', '1100010', '1111111', '0111111', '0000010', '0000010', '0000010', '0000010']
+        ];
+        const glyphWidth = 7;
+        const glyphGap = 2;
+        const glyphColumns = glyphs.length * glyphWidth + (glyphs.length - 1) * glyphGap;
+        const glyphRows = glyphs[0].length;
+        const glyphStartColumn = Math.floor((cols - glyphColumns) / 2);
+        const glyphStartRow = Math.floor((rows - glyphRows) / 2);
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            let accent = false;
+            const glyphColumn = col - glyphStartColumn;
+            const glyphRow = row - glyphStartRow;
+            if (glyphRow >= 0 && glyphRow < glyphRows && glyphColumn >= 0 && glyphColumn < glyphColumns) {
+              const glyphIndex = Math.floor(glyphColumn / (glyphWidth + glyphGap));
+              const localColumn = glyphColumn % (glyphWidth + glyphGap);
+              if (glyphIndex < glyphs.length && localColumn < glyphWidth) {
+                accent = glyphs[glyphIndex][glyphRow][localColumn] === '1';
+              }
+            }
+            const seed = Math.sin((col + 1) * 12.9898 + (row + 1) * 78.233) * 43758.5453;
+            const seedX = seed - Math.floor(seed) - 0.5;
+            const seedY = Math.sin((col + 1) * 39.3467 + (row + 1) * 11.135) * 0.5;
+            const drift = Math.sin((col + 1) * 5.173 + (row + 1) * 3.917) * 0.5;
+            const jitter = cell * 0.34;
+            const x = col * cell + cell / 2 + seedX * jitter;
+            const y = row * cell + cell / 2 + (seedY + drift * 0.35) * jitter;
+            const size = 0.78 + (Math.sin(col * 7.31 + row * 13.17) + 1) * 0.13;
+            dots.push({ x, y, homeX: x, homeY: y, vx: 0, vy: 0, r: dotSize / 2 * size * (accent ? 3 : 1), accent });
+          }
+        }
+      }
+
+      function move(event) {
+        const rect = canvas.getBoundingClientRect();
+        pointer.x = event.clientX - rect.left;
+        pointer.y = event.clientY - rect.top;
+        pointer.active = true;
+        pointer.lastMove = performance.now();
+      }
+
+      function leave() { pointer.active = false; }
+
+      function animate(now) {
+        ctx.clearRect(0, 0, width, height);
+        const returning = !pointer.active || now - pointer.lastMove > 1000;
+        for (const dot of dots) {
+          if (!returning) {
+            const dx = dot.x - pointer.x, dy = dot.y - pointer.y;
+            const distance = Math.sqrt(dx * dx + dy * dy) || 0.01;
+            const radius = 85 * scale;
+            if (distance < radius) {
+              const force = Math.pow((radius - distance) / radius, 2) * 1.9;
+              dot.vx += (dx / distance) * force;
+              dot.vy += (dy / distance) * force;
+            }
+          }
+          dot.vx += (dot.homeX - dot.x) * (returning ? 0.018 : 0.006);
+          dot.vy += (dot.homeY - dot.y) * (returning ? 0.018 : 0.006);
+          dot.vx *= 0.88;
+          dot.vy *= 0.88;
+          dot.x += dot.vx;
+          dot.y += dot.vy;
+          ctx.beginPath();
+          ctx.arc(dot.x, dot.y, dot.r, 0, TAU);
+          ctx.fillStyle = dot.accent ? '#FF7300' : '#404040';
+          ctx.fill();
+        }
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', resize);
+      canvas.addEventListener('pointermove', move);
+      canvas.addEventListener('pointerleave', leave);
+      resize();
+      requestAnimationFrame(animate);
+    })();
+  </script>
 </body>
 </html>
